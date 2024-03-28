@@ -14,7 +14,7 @@ private:
 public:
     User();
     User(std::string userName, std::string password);
-    User  operator =(User &user);
+
 
     void setName(std::string name);
     void setPassword(std::string password);

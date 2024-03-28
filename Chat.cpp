@@ -19,7 +19,7 @@ Chat::~Chat() {}
 void Chat::chat_start()
 {
 
-    //m_iserver.get_connect();// подключение к серверу
+    m_iserver.get_connect();// подключение к серверу
 
     //registrator(); //вызов регистратора
    std::string recip;
@@ -27,9 +27,6 @@ void Chat::chat_start()
    //std::cout << "recip mess: " << recip << "\n";
     query_distributor(recip);
     //chat();
-
-    // std::string chok = "check_ok";
-    // m_iserver.send_data_to_client(chok);
 
 }
 
@@ -96,17 +93,13 @@ void Chat::registrator()
         {
             std::string name = input_user_data();
             std::string pass = input_user_data();
-                logUser(name, pass);
-            //     //if(logUser()) //добавить условия
-            // {
-            //     // choice = 4;
-            // }
+            logUser(name, pass);
             break;
         }
 
         case 3: // logout
         {
-            logOutUser();
+            //logOutUser(m_user);
             break;
         }
 
@@ -205,14 +198,13 @@ User Chat::logUser(std::string name, std::string password)
 
 
 
-void  Chat::logOutUser(User user) // доработать
-{
-    user.setAuthStatus(false);
-    std::string head = "log_offf"; // для идентификации пакета
-    std::string body = head + m_delim + m_user.getUser();
-    m_iserver.send_data_to_client(body); // отправка запроса на выход
-    std::string rec_serv =  m_iserver.recip_mes_from_client();
-}
+// void  Chat::logOutUser(User user) // доработать
+// {
+//     user.setAuthStatus(false);
+//     std::string head = "log_offf"; // для идентификации пакета
+//     m_iserver.send_data_to_client(head); // подтверждение запроса на выход
+
+// }
 
 
 Message Chat::send_message()
@@ -259,7 +251,7 @@ std::string Chat::cache_str(std::string str)
 {
     size_t pos = str.find(m_delim);
     std::string result;
-    for(size_t i = 0; i <= pos; ++i)
+    for(size_t i = 0; i < pos; ++i)
     {
         result.push_back(str[i]);
     }
@@ -269,12 +261,14 @@ std::string Chat::cache_str(std::string str)
 void Chat::query_distributor(std::string query_from_client)
 {
     std::cout<<"query: " << query_from_client << "\n";
-    //std::string str_query = str_subst_start(query_from_client);
-    std::string str_query;
-    str_query = cache_str(query_from_client);
+    std::string str_query = str_subst_start(query_from_client);
+    //std::string str_query;
+    //str_query = cache_str(query_from_client);
 
-    std::cout<< "cathed string:  " << str_query;
-    if(str_query == "check")
+    std::cout<< "cathed string: " << str_query;
+
+    std::string check = "check";
+    if(str_query == check)
     {
         std::string substr = str_subst_end(query_from_client);
 
@@ -309,7 +303,7 @@ void Chat::query_distributor(std::string query_from_client)
             User temp_user;
             std::string name = str_subst_end(query_from_client);
             std::string pass = str_subst_end(name);
-         // temp_user = logUser(name, pass);
+          temp_user = logUser(name, pass);
             if(temp_user.getActiveUser() == true)
             {
                 m_iserver.send_data_to_client("log_ok");
@@ -320,8 +314,16 @@ void Chat::query_distributor(std::string query_from_client)
                 m_iserver.send_data_to_client("log_no");
             }
     }
-    else if(str_query = "log_off")
+    else if(str_query == "log_off")
+    {
 
+    }
+
+    else if(str_query == "chat_start")
+    {
+        chat();
+
+    }
 else
     {
         std::cout << "\n error";
@@ -334,12 +336,9 @@ void Chat::chat() // чат для общения пользователей
 {
     std::cout<< "Let`s get start to chat!\n";
     std::cout<< "Send end to exit\n";
-    std::string head_st = "chat_start"; // идентификатор для chat start
+    std::string head_st = "chat_ok"; // идентификатор для chat start
 
     m_iserver.send_data_to_client(head_st); // отправка запроса на старт чата
-    std::string rec_serv =  m_iserver.recip_mes_from_client(); //ответ от сервера
-    if(rec_serv == "chat_ok")
-    {
         //m_user.showUser();
         bool work_chat = true;
         std::string end_waiting = "end";
@@ -350,7 +349,7 @@ void Chat::chat() // чат для общения пользователей
 
             if(m_message.get_message() == end_waiting)
             {
-                return;
+                break;
             }
 
             m_message = recip_message();  // получаем сообщение, показываем и кладем его в массив сообщений
@@ -359,16 +358,13 @@ void Chat::chat() // чат для общения пользователей
 
             if(m_message.get_message() == end_waiting) // дубль, чтобы после каждого сообщ  выйти
             {
-                return;
+                break;
             }
         }
-    }
-    else
-    {
-        std::cout<< "closed";
+
+        std::cout<< "Chat closed";
         std::string head_end = "chat_end"; // идентификатор для chat end
         m_iserver.send_data_to_client(head_end); // отправка запроса на старт чата
-    }
 }
 
 

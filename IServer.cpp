@@ -57,6 +57,8 @@ void IServer::send_data_to_client(const std::string &datastr)
     bzero(message, MESSAGE_LENGTH);
     //bzero(data, data_size);
 }
+
+
 std::string IServer::recip_mes_from_client()
 {
     std::cout << "test input: ";

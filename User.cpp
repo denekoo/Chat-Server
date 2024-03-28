@@ -6,12 +6,7 @@ User::User(std::string userName, std::string password)
     : m_userName(userName)
     , m_password(password)
 {}
-User User:: operator =(User &user)
-{
-    m_userName = user.m_userName;
-    m_password = user.m_password;
-    return *this;
-}
+
 void User::setName(std::string name)
 {
     m_userName = name;

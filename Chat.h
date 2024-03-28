@@ -53,7 +53,7 @@ public:
     bool regUser(std::string user_name, std::string user_password);                  // регистратор пользователя
     User logUser(std::string name, std::string password);
 
-    void logOutUser(User user);               // выход
+    //void logOutUser(User user);               // выход
 
     bool chatMessage(User user); // Функция отправки сообщения от выбранного пользователя
 
