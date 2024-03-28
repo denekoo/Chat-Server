@@ -58,24 +58,24 @@ void IServer::send_data_to_client(const std::string &datastr)
     //bzero(data, data_size);
 }
 
-
-std::string IServer::recip_mes_from_client()
-{
-    std::cout << "test input: ";
-    std::string str;
-    std::getline(std::cin,str);
-    return str;
-}
-
-// std::string IServer:: recip_mes_from_client()
+// для эьуляции запросов от клиента
+// std::string IServer::recip_mes_from_client()
 // {
-//     bzero(message, MESSAGE_LENGTH);
-//     read(connection, message, sizeof(message));// sizeof(message)
-//     std::cout << "Data received from client: " <<  message << std::endl;
-
-//     std::string received_message(message);
-//     return received_message;
+//     std::cout << "test input: ";
+//     std::string str;
+//     std::getline(std::cin,str);
+//     return str;
 // }
+
+std::string IServer:: recip_mes_from_client()
+{
+    bzero(message, MESSAGE_LENGTH);
+    read(connection, message, sizeof(message));// sizeof(message)
+    std::cout << "Data received from client: " <<  message << std::endl;
+
+    std::string received_message(message);
+    return received_message;
+}
 
 void IServer::close_socket()
 {
